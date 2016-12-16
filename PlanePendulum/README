@@ -1,0 +1,42 @@
+        	 _!          ____CLASSICAL__MECHANICS____
+            ___{)o@}         |                          |
+           +###+ >.<         |   p    T * [      1      |
+ ]USB~~~~+##### m Q m        |   1      +    (1/4)*m    |
+ ---------------------       | -(+)-q   +   (9/64)*m**2 |
+   ANHARMONICES      \       |   T      + (25/256)*m**3 |
+       MUNDI:         \      |          + ... ]         |
+   DIGITAL             &     |                     ???  |
+     PENDULUM DATA           ============================
+			               Bradley Klee 
+Version 0.1                  		(AtomBlau4861A)
+
+Dependencies: Python, Gnuplot
+
+Important Files:
+	0. ./Data/100Trials.csv	     Master Data File
+	1. ./ProcessData.py   	     Run 1: redact data
+	2. ./EllKDataPlot.sh	     Run 2: analyze / plot
+	3. ./MouseRecordY.sh	     Example: Record Data 
+
+Description: Using a USB mouse and xdotool, we obtain 100 
+		trials of amplitude(time) data, and store 
+		"./Data/100Trials.csv". This program 
+		redacts data and performs recursive 
+		analysis to determine the expansion 
+		coefficients of EllipticK(m). For 
+		more explanation, see arxiv articles.
+
+Relevant Arxiv Articles:
+	1. https://arxiv.org/abs/0901.4319
+	2. https://arxiv.org/abs/1605.09102
+
+Change Log:
+* Translated data analysis from Mma to Python + Gnuplot
+
+Planned Changes:
+* ProcessDat.py		Read in config file to set variables. 
+* EllKDataPlot.sh 	Read log and construct result table. 
+* Pendulum.sh		GUI for easy setting parameters.
+* Pendulum.sh		Validation
+* Pendulum.sh		ASCII Swinging pendulum animation??
+
