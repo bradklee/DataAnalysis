@@ -6,14 +6,16 @@
 
 import csv
 import math
+import sys
 
 #META-ANALYSIS DEPENDANT VARIABLES.
 
-OFFSET = 0.005
-BINWIDTH = 0.0085
-LINEAR = 0.084
-QUADRATIC = 0.217
-CUBIC = 0.9
+OFFSET = float(sys.argv[1])
+BINWIDTH = float(sys.argv[2])
+LINEAR = float(sys.argv[3])
+QUADRATIC = float(sys.argv[4])
+CUBIC = float(sys.argv[5])
+EXAMPLE = int(sys.argv[6])
 
 #FUNCTION DEFINITIONS. MATHEMATICA TRANSCRIPTIONS.
 
@@ -84,6 +86,8 @@ def StdDevData(means,TmData):
 				transpose(DataPart),mean),
 			BinData(TmData),means)
 
+# VALIDATION / EXIT
+
 # MAIN PROGRAM.
 
 #Read File
@@ -104,7 +108,13 @@ CombinedTmData = list(item for sublist in TmData for item in sublist )
 #Redact
 MD = MeanData(CombinedTmData)
 SDD = StdDevData(MD,CombinedTmData)
-DataOut = list(filter(lambda a: a!=[], mapthread(lambda a,b:a+b,MD,SDD)))
+DataOut = list(map(lambda row: list(map(lambda element: round(element,5), row)),
+	list(filter(lambda a: a!=[], mapthread(lambda a,b:a+b,MD,SDD))) ))
+
+#Write Example Time Series Data
+with open("./Data/ExampleTimeSeries.csv","w") as f:
+	writer= csv.writer(f)
+	writer.writerows(Data[EXAMPLE-1])
 
 #Write Combined Data
 with open("./Data/CombinedTmData.csv","w") as f:
@@ -137,7 +147,3 @@ with open("./Data/CubicData.csv","w") as f:
 		list(filter(lambda a: a[0] < CUBIC,DataOut))
 		)
 
-#PRINTS
-
-#print(TmData[0])
-#print(list(map(lambda a: a[-1][0],TmData )))

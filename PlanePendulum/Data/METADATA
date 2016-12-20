@@ -1,4 +1,3 @@
-
 DIGITAL PENDULUM METADATA
 
 
@@ -16,9 +15,21 @@ note: Row offset 1. Data point "j" of trial "i" is
 	{ d[i,j], d[i+1,j] }
 
 with i odd. All data points from measurement with some 
-averaging over repeat values.  
+averaging over repeat values. 
+_________________________________________________________
+DataChecksum.sig:	
+	PGP verification of 100trials.csv.  
 ---------------------------------------------------------
 USER GENERATED DATA FILES. TEMPORARY.
+---------------------------------------------------------
+ExampleTimeSeries.csv:
+
+column		quantity 		unit
+=========================================================
+ 1		time 			seconds
+ 2		amplitude 		radian / 2 pi 
+
+note: Plot of data without processing.  
 ---------------------------------------------------------
 CombinedTmData.csv:
 
