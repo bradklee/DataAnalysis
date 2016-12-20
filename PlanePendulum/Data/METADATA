@@ -1,0 +1,48 @@
+
+DIGITAL PENDULUM METADATA
+
+
+MASTER DATA FILE. DO NOT ALTER OR DELETE!
+---------------------------------------------------------
+100Trials.csv:
+
+row		quantity 		unit
+=========================================================
+Odd  		time 			seconds
+Even 		amplitude 		radian / 2 Pi
+
+note: Row offset 1. Data point "j" of trial "i" is 
+	
+	{ d[i,j], d[i+1,j] }
+
+with i odd. All data points from measurement with some 
+averaging over repeat values.  
+---------------------------------------------------------
+USER GENERATED DATA FILES. TEMPORARY.
+---------------------------------------------------------
+CombinedTmData.csv:
+
+column		quantity 		unit
+=========================================================
+ 1		Energy 			dimensionless
+ 2		Period 			second 
+
+note: data for determining T(m). Processed from 
+	100Trials.csv. Energy variables is the 
+	same as "m" commonly used with EllipticK(m). 
+---------------------------------------------------------
+Linear/Quadratic/Cubic/MeanTm & Data.csv:
+
+column		quantity 		unit
+=========================================================
+ 1		Energy 			dimensionless
+ 2		Period 			second 
+ 3		Energy Deviation	dimensionless
+ 4		Period Deviation	second
+
+note: Linear, quadratic, cubic data files used separately 
+	and successively to compute respective fits.
+	MeanTmData contains all averaged data. Calculated
+	from CombinedTmData.csv according to user set 
+	meta-analysis dependant variables.
+---------------------------------------------------------
