@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# configure variables
+PROGRAMBASE="."
+
+# make directories: 
+mkdir -p $PROGRAMBASE/Style
+mkdir -p $PROGRAMBASE/Data
+
+
+# copy files:
+# executables 
+cp 	*.py 		$PROGRAMBASE
+cp 	PendulumData 	$PROGRAMBASE
+cp 	README 		$PROGRAMBASE
+
+# data
+cp 	./Data/100Trials.csv 		$PROGRAMBASE/Data
+cp 	./Data/DataChecksum.sig 	$PROGRAMBASE/Data
+cp 	./Data/METADATA 		$PROGRAMBASE/Data
+
+# style 
+cp 	./Style/* 	$PROGRAMBASE/Style 
+
+
+ 
+

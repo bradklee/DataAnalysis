@@ -1,11 +1,11 @@
 DIGITAL PENDULUM DATA ANALYSIS					Bradley Klee
-Version 1.0                  					(AtomBlau4861A)
+Version 1.1                  					(AtomBlau4861A)
 
 Dependencies: Python, Gnuplot, xdotool (optional)
 
 Description: 
 		Using a USB mouse and xdotool, we obtain 100 trials of 
-		amplitude(time) data, and store "./Data/100Trials.csv". This 
+		amplitude vs. time data, and store "./Data/100Trials.csv". This 
 		program redacts data and performs recursive analysis to determine 
 		the expansion coefficients of EllipticK(m). For more explanation, 
 		see arxiv articles [1,2].
@@ -15,15 +15,17 @@ File Tree:
 		./Data		data files
 		./Output	processed log, plots
 		./Style		splash / animation ASCII	
+		
+		Note: file tree can be changed by setting PROGRAMBASE and OUTBASE 
+			in the python and bash files. Automated by config + inst. 
+			In Arch Linux, file tree automated by PKGBUILD.
+			
 
 Runtime Instructions:
-		Run './PendulumData.sh' and input meta-analysis dependant 
+		Run './PendulumData' and input meta-analysis dependant 
 		parameters. Processed fit log and plots are saved in './Output'.
 
 Arxiv Articles:
 		1. https://arxiv.org/abs/0901.4319
 		2. https://arxiv.org/abs/1605.09102
 
-Next Changes:
-		* Add PKGBUILD file and fix directory references.  
-		* Add epsilon potential coefficient table.  

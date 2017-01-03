@@ -1,3 +1,10 @@
+#
+#ProcessFitLog.py
+#
+
+#SYSTEM CONFIGURATION VARIABLES
+OUTBASE="."
+
 PreValDict=list()
 PreDevDict=list()
 
@@ -19,7 +26,7 @@ EpExpect={
 "VAR8":-8
 }
 
-for line in open('./fit.log', 'r'):
+for line in open(OUTBASE+'/Output/fit.log', 'r'):
 	if "+/-" in line:
 		lineList = list(filter(lambda a: a!='', line.split(" ")))
 		PreValDict.append((lineList[0],lineList[2]))

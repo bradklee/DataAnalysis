@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# arguments 
+# 	0: base directory of program files
+#	1: base directory for output files 
+
+args=("$@")
+
+sed -i 's~PROGRAMBASE=".*"~PROGRAMBASE="'${args[0]}'"~g' ./PendulumData
+sed -i 's~OUTBASE=".*"~OUTBASE="'${args[1]}'"~g' ./PendulumData
+
+sed -i 's~PROGRAMBASE=".*"~PROGRAMBASE="'${args[0]}'"~g' ./ProcessData.py
+sed -i 's~OUTBASE=".*"~OUTBASE="'${args[1]}'"~g' ./ProcessData.py
+
+sed -i 's~OUTBASE=".*"~OUTBASE="'${args[1]}'"~g' ./ProcessFitLog.py
+
+sed -i 's~PROGRAMBASE=".*"~PROGRAMBASE="'${args[0]}'"~g' ./inst

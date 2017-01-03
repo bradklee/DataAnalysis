@@ -1,0 +1,118 @@
+#!/bin/bash
+
+#CONFIGURE VARS
+PROGRAMBASE="."
+OUTBASE="."
+
+#MAKE OUT DIRS
+mkdir -p $OUTBASE/Output
+mkdir -p $OUTBASE/Data
+
+#PROMPTS HERE
+
+while [[ ! ${EXAMPLE} =~ ^([1-9]|[1-9][0-9]|100)$ ]]; do
+        clear
+	cat $PROGRAMBASE/Style/FRAME2.ASC	
+	read -e -i 1 -p "	Index for example time series plot (integer [1,100]):  " EXAMPLE
+done
+
+while [[ ! ${OFFSET} =~ ^(0\.[0-9]+|\.[0-9]+)$ ]]; do
+        clear
+	cat $PROGRAMBASE/Style/FRAME2.ASC	
+	read -e -i 0.005 -p "	Minimum Energy (float [0.0,0.01]):  " OFFSET
+done
+
+while [[ ! ${BINWIDTH} =~ ^(0\.[0-9]+|\.[0-9]+)$ ]]; do
+        clear
+	cat $PROGRAMBASE/Style/FRAME2.ASC	
+	read -e -i 0.008 -p "	Bin Energy Width (float [0.0,0.05]):  " BINWIDTH
+done
+
+while [[ ! ${LINEAR} =~ ^(0\.[0-9]+|\.[0-9]+)$ ]]; do
+        clear
+	cat $PROGRAMBASE/Style/FRAME2.ASC	
+	read -e -i 0.08 -p "	Max Energy for Linear Data (float [0.0,1.0]):  " LINEAR
+done
+
+while [[ ! ${QUADRATIC} =~ ^(0\.[0-9]+|\.[0-9]+)$ ]]; do
+        clear
+	cat $PROGRAMBASE/Style/FRAME2.ASC	
+	read -e -i 0.21 -p "	Max Energy for Quadratic Data (float [$LINEAR,1.0]):  " QUADRATIC
+done
+
+while [[ ! ${CUBIC} =~ ^(0\.[0-9]+|\.[0-9]+)$ ]]; do
+        clear
+	cat $PROGRAMBASE/Style/FRAME2.ASC	
+	read -e -i 0.9 -p "	Max Energy for Cubic Data (float [$QUADRATIC,1.0]):  " CUBIC
+done
+
+
+# generate processed data slices
+
+(python $PROGRAMBASE/ProcessData.py $OFFSET $BINWIDTH $LINEAR $QUADRATIC $CUBIC $EXAMPLE > /dev/null) & pid=$!
+
+
+# Waiting Animation 
+while kill -0 $pid 2> /dev/null;
+do 
+  for i in {0..3}
+  do
+	clear
+        if [ $(( $i % 4)) -eq 0 ]; then
+		cat $PROGRAMBASE/Style/FRAME2.ASC
+        fi
+        if [ $(( $i % 4)) -eq 1 ]; then
+		cat $PROGRAMBASE/Style/FRAME1.ASC
+        fi
+        if [ $(( $i % 4)) -eq 2 ]; then
+		cat $PROGRAMBASE/Style/FRAME2.ASC
+        fi
+        if [ $(( $i % 4)) -eq 3 ]; then
+		cat $PROGRAMBASE/Style/FRAME3.ASC
+        fi
+	echo "			Processing the data..."
+        sleep .1
+  done
+done
+
+# use gnuplot to generate fits 
+gnuplot <<EOF
+set fit quiet
+set fit logfile '$OUTBASE/Output/fit.log'
+set terminal pngcairo size 800,600
+set output '$OUTBASE/Output/Tm.png'
+set datafile separator ","
+set title 'Experimental Determination of EllipticK Anharmonicity Constants'
+set key left
+set xlabel 'Dimensionless Energy m=k^2'
+set ylabel 'Period (seconds)'
+linear(x) = VART*(1+VARL*x)
+quadratic(x) = linear(x) + VART*VARQ*x**2
+cubic(x) = quadratic(x) + VART*VARC*x**3
+ellk(x) = VART2*(2/pi)*EllipticK(sqrt(x))
+fit ellk(x) '$OUTBASE/Data/MeanTmData.csv' using 1:2:3:4  xyerrors via VART2
+fit linear(x) '$OUTBASE/Data/LinearData.csv' using 1:2:3:4  xyerrors via VART, VARL
+fit quadratic(x) '$OUTBASE/Data/QuadraticData.csv' using 1:2:3:4  xyerrors via VART, VARQ
+fit cubic(x) '$OUTBASE/Data/CubicData.csv' using 1:2:3:4  xyerrors via VART, VARC
+plot [0.00:.4][.58:.66]  \
+        ellk(x), linear(x),quadratic(x),cubic(x), \
+        '$OUTBASE/Data/CubicData.csv' using 1:2:3:4 with xyerrorbars , \
+        '$OUTBASE/Data/QuadraticData.csv' using 1:2:3:4 with xyerrorbars, \
+        '$OUTBASE/Data/LinearData.csv' using 1:2:3:4 with xyerrorbars 
+set output '$OUTBASE/Output/AllData.png'
+set title 'All Period(Energy) Data ( no binning )'
+plot [0.00:.4][.58:.66] '$OUTBASE/Data/CombinedTmData.csv' using 1:2
+set title 'Example Time Series Data'
+set output '$OUTBASE/Output/ExampleTimeSeries.png'
+set key right
+set xlabel 'Time (seconds)'
+set ylabel 'Amplitude (radians / 2 pi)'
+plot [0.0:20.0][-0.25:0.25] '$OUTBASE/Data/ExampleTimeSeries.csv' using 1:2
+EOF
+
+# Redact fit log
+python $PROGRAMBASE/ProcessFitLog.py > $OUTBASE/Output/EditedFit.log
+clear
+cat $PROGRAMBASE/Style/FRAME2.ASC
+cat $OUTBASE/Output/EditedFit.log
+echo "**** Files in '$OUTBASE/Output' updated."

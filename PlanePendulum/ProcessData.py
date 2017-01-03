@@ -2,11 +2,17 @@
 # ProcessData.py
 #
 
+
 #DATA PROCESSING. EXTRACT 100 DATA RUNS. CONSTRUCT AVERAGED T(m) DATA.
 
 import csv
 import math
 import sys
+
+#SYSTEM CONFIGURATION VARIABLES
+
+PROGRAMBASE="."
+OUTBASE="."
 
 #META-ANALYSIS DEPENDANT VARIABLES.
 
@@ -86,12 +92,10 @@ def StdDevData(means,TmData):
 				transpose(DataPart),mean),
 			BinData(TmData),means)
 
-# VALIDATION / EXIT
-
 # MAIN PROGRAM.
 
 #Read File
-with open('./Data/100Trials.csv','r') as DataIn:
+with open(PROGRAMBASE+'/Data/100Trials.csv','r') as DataIn:
 	reader = csv.reader(DataIn)
 	RawData = list(map(lambda a:list(map(float,a)),list(reader)))
 
@@ -112,36 +116,36 @@ DataOut = list(map(lambda row: list(map(lambda element: round(element,5), row)),
 	list(filter(lambda a: a!=[], mapthread(lambda a,b:a+b,MD,SDD))) ))
 
 #Write Example Time Series Data
-with open("./Data/ExampleTimeSeries.csv","w") as f:
+with open(OUTBASE+"/Data/ExampleTimeSeries.csv","w") as f:
 	writer= csv.writer(f)
 	writer.writerows(Data[EXAMPLE-1])
 
 #Write Combined Data
-with open("./Data/CombinedTmData.csv","w") as f:
+with open(OUTBASE+"/Data/CombinedTmData.csv","w") as f:
 	writer= csv.writer(f)
 	writer.writerows(CombinedTmData)
 
 #Write Averaged Data
-with open("./Data/MeanTmData.csv","w") as f:
+with open(OUTBASE+"/Data/MeanTmData.csv","w") as f:
 	writer= csv.writer(f)
 	writer.writerows(DataOut)
 
 #Write Linear Averaged Data
-with open("./Data/LinearData.csv","w") as f:
+with open(OUTBASE+"/Data/LinearData.csv","w") as f:
 	writer= csv.writer(f)
 	writer.writerows(
 		list(filter(lambda a: a[0] < LINEAR,DataOut))
 		)
 
 #Write Quadratic Averaged Data
-with open("./Data/QuadraticData.csv","w") as f:
+with open(OUTBASE+"/Data/QuadraticData.csv","w") as f:
 	writer= csv.writer(f)
 	writer.writerows(
 		list(filter(lambda a: a[0] < QUADRATIC,DataOut))
 		)
 
 #Write Cubic Averaged Data
-with open("./Data/CubicData.csv","w") as f:
+with open(OUTBASE+"/Data/CubicData.csv","w") as f:
 	writer= csv.writer(f)
 	writer.writerows(
 		list(filter(lambda a: a[0] < CUBIC,DataOut))
