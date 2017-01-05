@@ -3,13 +3,13 @@
 # configure variables
 PROGRAMBASE="."
 
-# make directories: 
+# make directories:
 mkdir -p $PROGRAMBASE/Style
 mkdir -p $PROGRAMBASE/Data
 
 
 # copy files:
-# executables 
+# executables
 cp 	*.py 		$PROGRAMBASE
 cp 	PendulumData 	$PROGRAMBASE
 cp 	README 		$PROGRAMBASE
@@ -19,9 +19,9 @@ cp 	./Data/100Trials.csv 		$PROGRAMBASE/Data
 cp 	./Data/DataChecksum.sig 	$PROGRAMBASE/Data
 cp 	./Data/METADATA 		$PROGRAMBASE/Data
 
-# style 
-cp 	./Style/* 	$PROGRAMBASE/Style 
+# style
+cp 	./Style/* 	$PROGRAMBASE/Style
 
 
- 
+
 

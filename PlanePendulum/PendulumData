@@ -19,13 +19,13 @@ done
 while [[ ! ${OFFSET} =~ ^(0\.[0-9]+|\.[0-9]+)$ ]]; do
         clear
 	cat $PROGRAMBASE/Style/FRAME2.ASC	
-	read -e -i 0.005 -p "	Minimum Energy (float [0.0,0.01]):  " OFFSET
+	read -e -i 0.003 -p "	Minimum Energy (float [0.0,0.01]):  " OFFSET
 done
 
 while [[ ! ${BINWIDTH} =~ ^(0\.[0-9]+|\.[0-9]+)$ ]]; do
         clear
 	cat $PROGRAMBASE/Style/FRAME2.ASC	
-	read -e -i 0.008 -p "	Bin Energy Width (float [0.0,0.05]):  " BINWIDTH
+	read -e -i 0.013 -p "	Bin Energy Width (float [0.0,0.05]):  " BINWIDTH
 done
 
 while [[ ! ${LINEAR} =~ ^(0\.[0-9]+|\.[0-9]+)$ ]]; do
@@ -37,7 +37,7 @@ done
 while [[ ! ${QUADRATIC} =~ ^(0\.[0-9]+|\.[0-9]+)$ ]]; do
         clear
 	cat $PROGRAMBASE/Style/FRAME2.ASC	
-	read -e -i 0.21 -p "	Max Energy for Quadratic Data (float [$LINEAR,1.0]):  " QUADRATIC
+	read -e -i 0.22 -p "	Max Energy for Quadratic Data (float [$LINEAR,1.0]):  " QUADRATIC
 done
 
 while [[ ! ${CUBIC} =~ ^(0\.[0-9]+|\.[0-9]+)$ ]]; do
@@ -75,6 +75,8 @@ do
   done
 done
 
+# erase fit log
+rm $OUTBASE/Output/fit.log 2> /dev/null
 # use gnuplot to generate fits 
 gnuplot <<EOF
 set fit quiet
@@ -92,8 +94,8 @@ cubic(x) = quadratic(x) + VART*VARC*x**3
 ellk(x) = VART2*(2/pi)*EllipticK(sqrt(x))
 fit ellk(x) '$OUTBASE/Data/MeanTmData.csv' using 1:2:3:4  xyerrors via VART2
 fit linear(x) '$OUTBASE/Data/LinearData.csv' using 1:2:3:4  xyerrors via VART, VARL
-fit quadratic(x) '$OUTBASE/Data/QuadraticData.csv' using 1:2:3:4  xyerrors via VART, VARQ
-fit cubic(x) '$OUTBASE/Data/CubicData.csv' using 1:2:3:4  xyerrors via VART, VARC
+fit quadratic(x) '$OUTBASE/Data/QuadraticData.csv' using 1:2:3:4  xyerrors via VARQ
+fit cubic(x) '$OUTBASE/Data/CubicData.csv' using 1:2:3:4  xyerrors via  VARC
 plot [0.00:.4][.58:.66]  \
         ellk(x), linear(x),quadratic(x),cubic(x), \
         '$OUTBASE/Data/CubicData.csv' using 1:2:3:4 with xyerrorbars , \
